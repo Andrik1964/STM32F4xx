@@ -24,21 +24,21 @@
  *                               -----------
  *                           VB |           | +3V
  *                          C13 |           | GND
- *           Coolant Flood  C14 |           | +5V
- *            Coolant Mist  C15 | *     - * | B9   Safety door / Aux In 0
+ *            Клапан сдува  C14 |           | +5V
+ *     Вакуумный клапан №1  C15 | *     - * | B9   Safety door / Aux In 0
  *                          RST |      |K|  | B8   Cycle Start
- *                  X Step   A0 |       -   | B7   Feed Hold
- *             X Direction   A1 |           | B6   Reset/EStop
- *                  Y Step   A2 |           | B5
- *             Y Direction   A3 |    / \    | B4   Coolant Mist
- *                  Z Step   A4 |   <MCU>   | B3   Spindle Index
- *             Z Direction   A5 |    \ /    | A15  Spindle Pulse
- *    Aux In 0/1 / M3 Step   A6 |           | A12  USB D+
- * Aux In 1 / M3 Direction   A7 |   -   -   | A11  USB D-
- *          Steppers enable  B0 |  |R| |B|  | A10  M4 Direction
- *          Spindle Enable   B1 |   -   -   | A9   M4 Step
- *       Spindle Direction   B2 |           | A8   Spindle PWM
- *                M4 Limit  B10 |           | B15  Probe / M3 Limit
+ *         Y_DIRECTION_PIN   A0 |       -   | B7   Feed Hold
+ *              Y_STEP_PIN   A1 |           | B6   Reset/EStop
+ *              Z_STEP_PIN   A2 |           | B5   Вентилятор охлаждения (Fan)
+ *         Z_DIRECTION_PIN   A3 |    / \    | B4   
+ *                           A4 |   <MCU>   | B3   
+ *                           A5 |    \ /    | A15  
+ *         X_DIRECTION_PIN   A6 |           | A12  USB D+
+ *              X_STEP_PIN   A7 |   -   -   | A11  USB D-
+ *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  
+ *     Вакуумный клапан №2   B1 |   -   -   | A9   
+ *         Вакуумная помпа   B2 |           | A8   Подсветка LED ШИМ (M3 / Spindle PWM)
+ *                          B10 |           | B15  Probe
  *                          +3V |   -----   | B14  Z Limit
  *                          GND |  |     |  | B13  Y Limit
  *                          +5V |  | USB |  | B12  X Limit
