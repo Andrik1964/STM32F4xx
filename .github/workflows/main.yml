@@ -24,3 +24,9 @@ jobs:
 
       - name: Build Firmware with PlatformIO
         run: pio run -e blackpill_f411ce
+
+      - name: Upload Firmware Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BlackPill_F411_Firmware
+          path: .pio/build/blackpill_f411ce/firmware.*
