@@ -77,6 +77,7 @@
 #define LIMIT_INMODE            GPIO_SHIFT12
 
 // Define ganged axis or A axis step pulse and step direction output pins.
+/*
 #if N_ABC_MOTORS == 1
 #define M3_AVAILABLE
 #define M3_STEP_PORT            STEP_PORT
@@ -88,6 +89,7 @@
 #define M3_LIMIT_PIN            15
 #endif
 #endif
+*/
 
 #if N_ABC_MOTORS == 0
 #define AUXOUTPUT0_PORT         GPIOA
