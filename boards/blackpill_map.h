@@ -91,21 +91,24 @@
 #endif
 */
 
-#if N_ABC_MOTORS == 0
-#define AUXOUTPUT0_PORT         GPIOA
-#define AUXOUTPUT0_PIN          7
-#define AUXOUTPUT1_PORT         GPIOA
-#define AUXOUTPUT1_PIN          6
-#endif
-#define AUXOUTPUT2_PORT         GPIOA // Spindle PWM
+// AUXOUTPUT0 не используем, чтобы не перекрывать X_STEP (PA7) и X_DIR (PA6)
+
+#define AUXOUTPUT1_PORT         GPIOB // Вентилятор охлаждения (Fan)
+#define AUXOUTPUT1_PIN          5
+
+#define AUXOUTPUT2_PORT         GPIOA // Подсветка LED ШИМ (M3 / Spindle PWM)
 #define AUXOUTPUT2_PIN          8
-#define AUXOUTPUT3_PORT         GPIOB // Spindle direction
+
+#define AUXOUTPUT3_PORT         GPIOB // Вакуумная помпа (Pump / Spindle DIR)
 #define AUXOUTPUT3_PIN          2
-#define AUXOUTPUT4_PORT         GPIOB // Spindle enable
+
+#define AUXOUTPUT4_PORT         GPIOB // Вакуумный клапан №2 (Сопло 2 / Spindle ENA)
 #define AUXOUTPUT4_PIN          1
-#define AUXOUTPUT5_PORT         GPIOC // Coolant flood
+
+#define AUXOUTPUT5_PORT         GPIOC // Вакуумный клапан №1 (Сопло 1 / M8 / Flood)
 #define AUXOUTPUT5_PIN          15
-#define AUXOUTPUT6_PORT         GPIOC // Coolant mist
+
+#define AUXOUTPUT6_PORT         GPIOC // Клапан сдува (Blow-off / M7 / Mist)
 #define AUXOUTPUT6_PIN          14
 
 // Define driver spindle pins
