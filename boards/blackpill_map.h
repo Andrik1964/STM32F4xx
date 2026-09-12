@@ -170,12 +170,12 @@
 #define CYCLE_START_PORT        AUXINPUT4_PORT
 #define CYCLE_START_PIN         AUXINPUT4_PIN
 #endif
-
+/*
 #if PROBE_ENABLE && defined(AUXINPUT1_PIN)
 #define PROBE_PORT              AUXINPUT1_PORT
 #define PROBE_PIN               AUXINPUT1_PIN
 #endif
-
+*/
 #if SAFETY_DOOR_ENABLE
 #define SAFETY_DOOR_PORT        AUXINPUT0_PORT
 #define SAFETY_DOOR_PIN         AUXINPUT0_PIN
