@@ -24,20 +24,20 @@
  *                               -----------
  *                           VB |           | +3V
  *                          C13 |           | GND
- *            Клапан сдува  C14 |           | +5V
- *     Вакуумный клапан №1  C15 | *     - * | B9   Safety door / Aux In 0
+ *                          C14 |           | +5V
+ *                          C15 | *     - * | B9   Safety door / Aux In 0
  *                          RST |      |K|  | B8   Cycle Start
  *         Y_DIRECTION_PIN   A0 |       -   | B7   Feed Hold
  *              Y_STEP_PIN   A1 |           | B6   Reset/EStop
- *              Z_STEP_PIN   A2 |           | B5   Вентилятор охлаждения (Fan)
- *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп. нагрузка
- *                           A4 |   <MCU>   | B3   (свободен)
- *                           A5 |    \ /    | A15  (свободен)
+ *              Z_STEP_PIN   A2 |           | B5   Вентилятор охлаждения (Fan) / AUXOUT4
+ *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп. нагрузка / AUXOUT5
+ *   Вакуумный клапан №1     A4 |   <MCU>   | B3   (свободен)
+ *   Вакуумный клапан №2     A5 |    \ /    | A15  (свободен)
  *         X_DIRECTION_PIN   A6 |           | A12  USB D+
  *              X_STEP_PIN   A7 |   -   -   | A11  USB D-
- *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  (свободен)
- *     Вакуумный клапан №2   B1 |   -   -   | A9   (свободен)
- *         Вакуумная помпа   B2 |           | A8   Подсветка LED ШИМ (Spindle PWM / TIM1_CH1)
+ *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  Клапан сдува / AUXOUT3
+ *     (Spindle ENA — не исп.) B1 |   -   -   | A9   Вакуумная помпа / AUXOUT2
+ *     (Spindle DIR — не исп.) B2 |           | A8   Подсветка LED ШИМ (Spindle PWM)
  *                          B10 |           | B15  Probe
  *                          +3V |   -----   | B14  Z Limit
  *                          GND |  |     |  | B13  Y Limit
@@ -53,15 +53,15 @@
 
 // Define step pulse output pins.
 #define STEP_PORT               GPIOA
-#define X_STEP_PIN              7       // PA7
-#define Y_STEP_PIN              1       // PA1
-#define Z_STEP_PIN              2       // PA2
+#define X_STEP_PIN              7
+#define Y_STEP_PIN              1
+#define Z_STEP_PIN              2
 #define STEP_OUTMODE            GPIO_MAP
 
 #define DIRECTION_PORT          GPIOA
-#define X_DIRECTION_PIN         6       // PA6
-#define Y_DIRECTION_PIN         0       // PA0
-#define Z_DIRECTION_PIN         3       // PA3
+#define X_DIRECTION_PIN         6
+#define Y_DIRECTION_PIN         0
+#define Z_DIRECTION_PIN         3
 #define DIRECTION_OUTMODE       GPIO_MAP
 
 // Define stepper driver enable/disable output pin.
@@ -77,7 +77,7 @@
 #define LIMIT_INMODE            GPIO_SHIFT12
 
 // Define ganged axis or A axis step pulse and step direction output pins.
-// Отключено, чтобы освободить PA6, PA7 и PB15 под основную карту пинов.
+// Отключено, чтобы освободить PA6, PA7 и PB15.
 /*
 #if N_ABC_MOTORS == 1
 #define M3_AVAILABLE
@@ -92,58 +92,44 @@
 #endif
 */
 
-// Auxiliary outputs.
-// AUXOUTPUT0: доп. нагрузка (PB4)
-#define AUXOUTPUT0_PORT         GPIOB
-#define AUXOUTPUT0_PIN          4
-
-// AUXOUTPUT1: вентилятор охлаждения (Fan) (PB5)
-#define AUXOUTPUT1_PORT         GPIOB
-#define AUXOUTPUT1_PIN          5
-
-// AUXOUTPUT2: Spindle PWM — PA8, TIM1_CH1 (аппаратный ШИМ, НЕ МЕНЯТЬ индекс!)
-#define AUXOUTPUT2_PORT         GPIOA
-#define AUXOUTPUT2_PIN          8
-
-// AUXOUTPUT3: вакуумная помпа (Pump / Spindle DIR) (PB2)
-#define AUXOUTPUT3_PORT         GPIOB
-#define AUXOUTPUT3_PIN          2
-
-// AUXOUTPUT4: вакуумный клапан №2 (Сопло 2 / Spindle ENA) (PB1)
-#define AUXOUTPUT4_PORT         GPIOB
-#define AUXOUTPUT4_PIN          1
-
-// AUXOUTPUT5: вакуумный клапан №1 (Сопло 1 / M8 / Flood) (PC15)
-#define AUXOUTPUT5_PORT         GPIOC
-#define AUXOUTPUT5_PIN          15
-
-// AUXOUTPUT6: клапан сдува (Blow-off / M7 / Mist) (PC14)
-#define AUXOUTPUT6_PORT         GPIOC
-#define AUXOUTPUT6_PIN          14
-
-// Define driver spindle pins
+// Define driver spindle pins.
+// PB1/PB2 формально заняты под ENA/DIR, но физически не разводятся.
+// ENA/DIR оставлены, чтобы не менять my_machine.h и не бороться с DRIVER_SPINDLE_ENABLE.
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_ENA
-#define SPINDLE_ENABLE_PORT     AUXOUTPUT4_PORT
-#define SPINDLE_ENABLE_PIN      AUXOUTPUT4_PIN
+#define SPINDLE_ENABLE_PORT     GPIOB
+#define SPINDLE_ENABLE_PIN      1
 #endif
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_PWM
-#define SPINDLE_PWM_PORT        AUXOUTPUT2_PORT
-#define SPINDLE_PWM_PIN         AUXOUTPUT2_PIN
+#define SPINDLE_PWM_PORT        GPIOA   // PA8 = TIM1_CH1, аппаратный ШИМ
+#define SPINDLE_PWM_PIN         8
 #endif
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_DIR
-#define SPINDLE_DIRECTION_PORT  AUXOUTPUT3_PORT
-#define SPINDLE_DIRECTION_PIN   AUXOUTPUT3_PIN
+#define SPINDLE_DIRECTION_PORT  GPIOB
+#define SPINDLE_DIRECTION_PIN   2
 #endif
 
-// Define flood and mist coolant enable output pins.
-#if COOLANT_ENABLE & COOLANT_FLOOD
-#define COOLANT_FLOOD_PORT      AUXOUTPUT5_PORT
-#define COOLANT_FLOOD_PIN       AUXOUTPUT5_PIN
-#endif
-#if COOLANT_ENABLE & COOLANT_MIST
-#define COOLANT_MIST_PORT       AUXOUTPUT6_PORT
-#define COOLANT_MIST_PIN        AUXOUTPUT6_PIN
-#endif
+// Auxiliary outputs — все реальные устройства платы.
+// Определены последовательно 0..5, поэтому M62 Pn совпадает с номером AUXOUTPUTn.
+#define AUXOUTPUT0_PORT         GPIOA   // Вакуумный клапан №1
+#define AUXOUTPUT0_PIN          4
+
+#define AUXOUTPUT1_PORT         GPIOA   // Вакуумный клапан №2
+#define AUXOUTPUT1_PIN          5
+
+#define AUXOUTPUT2_PORT         GPIOA   // Вакуумная помпа
+#define AUXOUTPUT2_PIN          9
+
+#define AUXOUTPUT3_PORT         GPIOA   // Клапан сдува
+#define AUXOUTPUT3_PIN          10
+
+#define AUXOUTPUT4_PORT         GPIOB   // Вентилятор охлаждения (Fan)
+#define AUXOUTPUT4_PIN          5
+
+#define AUXOUTPUT5_PORT         GPIOB   // Доп. нагрузка
+#define AUXOUTPUT5_PIN          4
+
+// Coolant — не назначаем пины, чтобы ничего не занимать.
+// Управление клапанами делаем через M62/M63.
 
 // Spindle encoder pins.
 #if SPINDLE_ENCODER_ENABLE
