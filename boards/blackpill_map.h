@@ -30,7 +30,7 @@
  *         Y_DIRECTION_PIN   A0 |       -   | B7   Feed Hold
  *              Y_STEP_PIN   A1 |           | B6   Reset/EStop
  *              Z_STEP_PIN   A2 |           | B5   Вентилятор охлаждения (Fan)
- *         Z_DIRECTION_PIN   A3 |    / \    | B4   
+ *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп.нагрузка  
  *                           A4 |   <MCU>   | B3   
  *                           A5 |    \ /    | A15  
  *         X_DIRECTION_PIN   A6 |           | A12  USB D+
@@ -119,8 +119,8 @@
 #endif
 */
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_PWM
-#define SPINDLE_PWM_PORT        AUXOUTPUT2_PORT
-#define SPINDLE_PWM_PIN         AUXOUTPUT2_PIN
+#define SPINDLE_PWM_PORT        GPIOA // Напрямую PA8 для аппратного ШИМ TIM1_CH1
+#define SPINDLE_PWM_PIN         8
 #endif
 /*
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_DIR
