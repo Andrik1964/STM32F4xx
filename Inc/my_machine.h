@@ -21,7 +21,7 @@
 
 // NOTE: Only one board may be enabled!
 // If none is enabled pin mappings from generic_map.h will be used.
-//#define BOARD_BLACKPILL           // For use with F411 BlackPill, with optional auto square support for one axis
+#define BOARD_BLACKPILL           // For use with F411 BlackPill, with optional auto square support for one axis
 //#define BOARD_BLACKPILL_ALT2      // For use with F411 BlackPill, with optional auto square support for one axis, I2C and spindle sync
 //#define BOARD_BTT_OCTOPUS_PRO     // F446 based 3D Printer board
 //#define BOARD_BTT_SKR_20          // F407 based 3D Printer board
