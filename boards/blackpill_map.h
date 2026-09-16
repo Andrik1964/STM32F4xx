@@ -30,14 +30,14 @@
  *         Y_DIRECTION_PIN   A0 |       -   | B7   Feed Hold
  *              Y_STEP_PIN   A1 |           | B6   Reset/EStop
  *              Z_STEP_PIN   A2 |           | B5   Вентилятор охлаждения (Fan)
- *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп.нагрузка  
- *                           A4 |   <MCU>   | B3   
- *                           A5 |    \ /    | A15  
+ *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп. нагрузка
+ *                           A4 |   <MCU>   | B3   (свободен)
+ *                           A5 |    \ /    | A15  (свободен)
  *         X_DIRECTION_PIN   A6 |           | A12  USB D+
  *              X_STEP_PIN   A7 |   -   -   | A11  USB D-
- *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  
- *     Вакуумный клапан №2   B1 |   -   -   | A9   
- *         Вакуумная помпа   B2 |           | A8   Подсветка LED ШИМ (M3 / Spindle PWM)
+ *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  (свободен)
+ *     Вакуумный клапан №2   B1 |   -   -   | A9   (свободен)
+ *         Вакуумная помпа   B2 |           | A8   Подсветка LED ШИМ (Spindle PWM / TIM1_CH1)
  *                          B10 |           | B15  Probe
  *                          +3V |   -----   | B14  Z Limit
  *                          GND |  |     |  | B13  Y Limit
@@ -53,15 +53,15 @@
 
 // Define step pulse output pins.
 #define STEP_PORT               GPIOA
-#define X_STEP_PIN              7       // Ваша схема: PA7
-#define Y_STEP_PIN              1       // Ваша схема: PA1
-#define Z_STEP_PIN              2       // Ваша схема: PA2
+#define X_STEP_PIN              7       // PA7
+#define Y_STEP_PIN              1       // PA1
+#define Z_STEP_PIN              2       // PA2
 #define STEP_OUTMODE            GPIO_MAP
 
 #define DIRECTION_PORT          GPIOA
-#define X_DIRECTION_PIN         6       // Ваша схема: PA6
-#define Y_DIRECTION_PIN         0       // Ваша схема: PA0
-#define Z_DIRECTION_PIN         3       // Ваша схема: PA3
+#define X_DIRECTION_PIN         6       // PA6
+#define Y_DIRECTION_PIN         0       // PA0
+#define Z_DIRECTION_PIN         3       // PA3
 #define DIRECTION_OUTMODE       GPIO_MAP
 
 // Define stepper driver enable/disable output pin.
@@ -77,6 +77,7 @@
 #define LIMIT_INMODE            GPIO_SHIFT12
 
 // Define ganged axis or A axis step pulse and step direction output pins.
+// Отключено, чтобы освободить PA6, PA7 и PB15 под основную карту пинов.
 /*
 #if N_ABC_MOTORS == 1
 #define M3_AVAILABLE
@@ -91,38 +92,44 @@
 #endif
 */
 
-// AUXOUTPUT0 не используем, чтобы не перекрывать X_STEP (PA7) и X_DIR (PA6)
+// Auxiliary outputs.
+// AUXOUTPUT0: доп. нагрузка (PB4)
+#define AUXOUTPUT0_PORT         GPIOB
+#define AUXOUTPUT0_PIN          4
 
-#define AUXOUTPUT1_PORT         GPIOB // Вентилятор охлаждения (Fan)
+// AUXOUTPUT1: вентилятор охлаждения (Fan) (PB5)
+#define AUXOUTPUT1_PORT         GPIOB
 #define AUXOUTPUT1_PIN          5
 
-#define AUXOUTPUT2_PORT         GPIOB // Доп. нагрузка
-#define AUXOUTPUT2_PIN          4
+// AUXOUTPUT2: Spindle PWM — PA8, TIM1_CH1 (аппаратный ШИМ, НЕ МЕНЯТЬ индекс!)
+#define AUXOUTPUT2_PORT         GPIOA
+#define AUXOUTPUT2_PIN          8
 
-#define AUXOUTPUT3_PORT         GPIOB // Вакуумная помпа (Pump / Spindle DIR)
+// AUXOUTPUT3: вакуумная помпа (Pump / Spindle DIR) (PB2)
+#define AUXOUTPUT3_PORT         GPIOB
 #define AUXOUTPUT3_PIN          2
 
-#define AUXOUTPUT4_PORT         GPIOB // Вакуумный клапан №2 (Сопло 2 / Spindle ENA)
+// AUXOUTPUT4: вакуумный клапан №2 (Сопло 2 / Spindle ENA) (PB1)
+#define AUXOUTPUT4_PORT         GPIOB
 #define AUXOUTPUT4_PIN          1
 
-#define AUXOUTPUT5_PORT         GPIOC // Вакуумный клапан №1 (Сопло 1 / M8 / Flood)
+// AUXOUTPUT5: вакуумный клапан №1 (Сопло 1 / M8 / Flood) (PC15)
+#define AUXOUTPUT5_PORT         GPIOC
 #define AUXOUTPUT5_PIN          15
 
-#define AUXOUTPUT6_PORT         GPIOC // Клапан сдува (Blow-off / M7 / Mist)
+// AUXOUTPUT6: клапан сдува (Blow-off / M7 / Mist) (PC14)
+#define AUXOUTPUT6_PORT         GPIOC
 #define AUXOUTPUT6_PIN          14
 
 // Define driver spindle pins
-
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_ENA
 #define SPINDLE_ENABLE_PORT     AUXOUTPUT4_PORT
 #define SPINDLE_ENABLE_PIN      AUXOUTPUT4_PIN
 #endif
-
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_PWM
-#define SPINDLE_PWM_PORT        GPIOA // Напрямую PA8 для аппратного ШИМ TIM1_CH1
-#define SPINDLE_PWM_PIN         8
+#define SPINDLE_PWM_PORT        AUXOUTPUT2_PORT
+#define SPINDLE_PWM_PIN         AUXOUTPUT2_PIN
 #endif
-
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_DIR
 #define SPINDLE_DIRECTION_PORT  AUXOUTPUT3_PORT
 #define SPINDLE_DIRECTION_PIN   AUXOUTPUT3_PIN
