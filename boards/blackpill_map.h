@@ -96,8 +96,8 @@
 #define AUXOUTPUT1_PORT         GPIOB // Вентилятор охлаждения (Fan)
 #define AUXOUTPUT1_PIN          5
 
-#define AUXOUTPUT2_PORT         GPIOA // Подсветка LED ШИМ (M3 / Spindle PWM)
-#define AUXOUTPUT2_PIN          8
+#define AUXOUTPUT2_PORT         GPIOB // Доп. нагрузка
+#define AUXOUTPUT2_PIN          4
 
 #define AUXOUTPUT3_PORT         GPIOB // Вакуумная помпа (Pump / Spindle DIR)
 #define AUXOUTPUT3_PIN          2
