@@ -50,6 +50,8 @@
 #endif
 
 #define BOARD_NAME "BlackPill"
+// Отключаем плагин Fans, если он был включён где-то в другом месте
+#undef FANS_ENABLE
 
 // Define step pulse output pins.
 #define STEP_PORT               GPIOA
