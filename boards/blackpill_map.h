@@ -30,14 +30,14 @@
  *         Y_DIRECTION_PIN   A0 |       -   | B7   Feed Hold
  *              Y_STEP_PIN   A1 |           | B6   Reset/EStop
  *              Z_STEP_PIN   A2 |           | B5   Вентилятор охлаждения (Fan) / AUXOUT4
- *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп. нагрузка / AUXOUT5
+ *         Z_DIRECTION_PIN   A3 |    / \    | B4   Доп. нагрузка / Fan 0 (плагин Fans)
  *   Вакуумный клапан №1     A4 |   <MCU>   | B3   (свободен)
  *   Вакуумный клапан №2     A5 |    \ /    | A15  (свободен)
  *         X_DIRECTION_PIN   A6 |           | A12  USB D+
  *              X_STEP_PIN   A7 |   -   -   | A11  USB D-
  *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  Клапан сдува / AUXOUT3
- *     (Spindle ENA — не исп.) B1 |   -   -   | A9   Вакуумная помпа / AUXOUT2
- *     (Spindle DIR — не исп.) B2 |           | A8   Подсветка LED ШИМ (Spindle PWM)
+ *   (Spindle ENA — не исп.) B1 |   -   -   | A9   Вакуумная помпа / AUXOUT6
+ *   (Spindle DIR — не исп.) B2 |           | A8   Подсветка LED ШИМ (Spindle PWM / TIM1_CH1)
  *                          B10 |           | B15  Probe
  *                          +3V |   -----   | B14  Z Limit
  *                          GND |  |     |  | B13  Y Limit
@@ -99,25 +99,22 @@
 #define SPINDLE_ENABLE_PORT     GPIOB
 #define SPINDLE_ENABLE_PIN      1
 #endif
-#if DRIVER_SPINDLE_ENABLE & SPINDLE_PWM
-#define SPINDLE_PWM_PORT        GPIOA   // PA8 = TIM1_CH1, аппаратный ШИМ
-#define SPINDLE_PWM_PIN         8
-#endif
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_DIR
 #define SPINDLE_DIRECTION_PORT  GPIOB
 #define SPINDLE_DIRECTION_PIN   2
 #endif
 
-// Auxiliary outputs — все реальные устройства платы.
-// Определены последовательно 0..5, поэтому M62 Pn совпадает с номером AUXOUTPUTn.
+// Auxiliary outputs.
+// ВАЖНО: PA8 (подсветка LED) должен идти через AUXOUTPUT2 — только так драйвер
+// STM32F4xx находит соответствие "AUXOUTPUT2 -> TIM1_CH1 -> AF1" и включает ШИМ.
 #define AUXOUTPUT0_PORT         GPIOA   // Вакуумный клапан №1
 #define AUXOUTPUT0_PIN          4
 
 #define AUXOUTPUT1_PORT         GPIOA   // Вакуумный клапан №2
 #define AUXOUTPUT1_PIN          5
 
-#define AUXOUTPUT2_PORT         GPIOA   // Вакуумная помпа
-#define AUXOUTPUT2_PIN          9
+#define AUXOUTPUT2_PORT         GPIOA   // Spindle PWM (подсветка LED), PA8/TIM1_CH1
+#define AUXOUTPUT2_PIN          8
 
 #define AUXOUTPUT3_PORT         GPIOA   // Клапан сдува
 #define AUXOUTPUT3_PIN          10
@@ -125,8 +122,17 @@
 #define AUXOUTPUT4_PORT         GPIOB   // Вентилятор охлаждения (Fan)
 #define AUXOUTPUT4_PIN          5
 
-#define AUXOUTPUT5_PORT         GPIOB   // Доп. нагрузка
+#define AUXOUTPUT5_PORT         GPIOB   // Доп. нагрузка (занят Fan 0 плагином Fans)
 #define AUXOUTPUT5_PIN          4
+
+#define AUXOUTPUT6_PORT         GPIOA   // Вакуумная помпа
+#define AUXOUTPUT6_PIN          9
+
+// Spindle PWM привязан к AUXOUTPUT2 (PA8).
+#if DRIVER_SPINDLE_ENABLE & SPINDLE_PWM
+#define SPINDLE_PWM_PORT        AUXOUTPUT2_PORT
+#define SPINDLE_PWM_PIN         AUXOUTPUT2_PIN
+#endif
 
 // Coolant — не назначаем пины, чтобы ничего не занимать.
 // Управление клапанами делаем через M62/M63.
