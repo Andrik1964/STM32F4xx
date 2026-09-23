@@ -35,10 +35,10 @@
  *   Вакуумный клапан №2     A5 |    \ /    | A15  (свободен)
  *         X_DIRECTION_PIN   A6 |           | A12  USB D+
  *              X_STEP_PIN   A7 |   -   -   | A11  USB D-
- *      STEPPERS_ENABLE_PIN  B0 |  |R| |B|  | A10  Клапан сдува / AUXOUT3
+ *                           B0 |  |R| |B|  | A10  Клапан сдува / AUXOUT3
  *   (Spindle ENA — не исп.) B1 |   -   -   | A9   Вакуумная помпа / AUXOUT6
  *   (Spindle DIR — не исп.) B2 |           | A8   Подсветка LED ШИМ (Spindle PWM / TIM1_CH1)
- *                          B10 |           | B15  Probe
+ *     STEPPERS_ENABLE_PIN  B10 |           | B15  Probe
  *                          +3V |   -----   | B14  Z Limit
  *                          GND |  |     |  | B13  Y Limit
  *                          +5V |  | USB |  | B12  X Limit
@@ -68,8 +68,15 @@
 
 // Define stepper driver enable/disable output pin.
 #define STEPPERS_ENABLE_PORT    GPIOB
-#define STEPPERS_ENABLE_PIN     0
+#define STEPPERS_ENABLE_PIN     10
 #define STEPPERS_ENABLE_MASK    STEPPERS_ENABLE_BIT
+
+// Analog inputs for vacuum sensors (ADC1 channels 8 and 9)
+#define AUXINPUT0_ANALOG_PORT   GPIOB
+#define AUXINPUT0_ANALOG_PIN    0                  // PB0 = ADC1_IN8 (Сопло 1)
+
+#define AUXINPUT1_ANALOG_PORT   GPIOB
+#define AUXINPUT1_ANALOG_PIN    1                  // PB1 = ADC1_IN9 (Сопло 2)
 
 // Define homing/hard limit switch input pins.
 #define LIMIT_PORT              GPIOB
