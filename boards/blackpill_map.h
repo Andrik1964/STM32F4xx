@@ -78,6 +78,9 @@
 #define AUXINPUT1_ANALOG_PORT   GPIOB
 #define AUXINPUT1_ANALOG_PIN    1                  // PB1 = ADC1_IN9 (Сопло 2)
 
+#define AUXINPUT2_ANALOG_PORT   GPIOA
+#define AUXINPUT2_ANALOG_PIN    4                  // PA4 = ADC1_IN4 (Ресивер)
+
 // Define homing/hard limit switch input pins.
 #define LIMIT_PORT              GPIOB
 #define X_LIMIT_PIN             12
@@ -117,7 +120,7 @@
 // ВАЖНО: PA8 (подсветка LED) должен идти через AUXOUTPUT2 — только так драйвер
 // STM32F4xx находит соответствие "AUXOUTPUT2 -> TIM1_CH1 -> AF1" и включает ШИМ.
 #define AUXOUTPUT0_PORT         GPIOA   // Вакуумный клапан №1
-#define AUXOUTPUT0_PIN          4
+#define AUXOUTPUT0_PIN          15
 
 #define AUXOUTPUT1_PORT         GPIOA   // Вакуумный клапан №2
 #define AUXOUTPUT1_PIN          5
